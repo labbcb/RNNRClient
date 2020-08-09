@@ -52,16 +52,16 @@ task_df <- function(task) {
     state = task$state,
     request_cpu_cores = task$resources$cpu_cores,
     request_memory_gb = ifelse(is.null(task$resources$ram_gb), 0, task$resources$ram_gb),
-    worker_node = task$worker$host,
-    max_cpu_cores = ceiling(task$worker$cpu_percentage / 100),
-    max_memory_gb = task$worker$memory * 1e-9,
-    started = as_datetime(task$logs$start_time),
-    completed = as_datetime(task$logs$end_time),
-    executor_started = as_datetime(task$logs$log[[1]]$start_time),
-    executor_completed = as_datetime(task$logs$log[[1]]$end_time),
+    worker_node = task$host,
+    max_cpu_cores = ceiling(task$metrics$cpu_percentage / 100),
+    max_memory_gb = task$metrics$memory * 1e-9,
+    started = as_datetime(task$logs[[1]]$start_time),
+    completed = as_datetime(task$logs[[1]]$end_time),
+    executor_started = as_datetime(task$logs[[1]]$logs[[1]]$start_time),
+    executor_completed = as_datetime(task$logs[[1]]$logs[[1]]$end_time),
     from_execution = executor_completed - executor_started,
     from_start = completed - started,
     from_creation = completed - created,
-    exit_code = task$logs$log[[1]]$exit_code
+    exit_code = task$logs[[1]]$logs[[1]]$exit_code
   ) %>% separate(col = "name", into = c("workflow", "task"), sep = "\\.")
 }
