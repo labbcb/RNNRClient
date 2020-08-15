@@ -65,3 +65,12 @@ task_df <- function(task) {
     exit_code = task$logs[[1]]$logs[[1]]$exit_code
   ) %>% separate(col = "name", into = c("workflow", "task"), sep = "\\.")
 }
+
+#' Read tasks from JSON file
+#'
+#' @importFrom jsonlite read_json
+#' @export
+read_tasks <- function(file) {
+  read_json(file) %>%
+    map_df(task_df)
+}
